@@ -1,0 +1,81 @@
+/* === Video Background Styling === */
+video {
+    object-fit: cover;       /* Makes the video cover the entire container */
+    width: 100%;
+    height: 100%;
+    position: fixed;         /* Fixes the video in place behind content */
+    z-index: -1;             /* Sends the video behind other elements */
+  }
+  
+  /* === Hero Section Container === */
+  .hero-container {
+    height: 100vh;           /* Full viewport height */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);  /* Adds dark overlay */
+    object-fit: contain;     /* Not effective on div, can remove */
+  }
+  
+  /* === Hero Heading === */
+  .hero-container > h1 {
+    color: #fff;
+    font-size: 100px;
+    margin-top: -100px;
+  }
+  
+  /* === Hero Subtext === */
+  .hero-container > p {
+    margin-top: 8px;
+    color: #fff;
+    font-size: 32px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+      'Lucida Sans', Arial, sans-serif;
+  }
+  
+  /* === Hero Buttons Section === */
+  .hero-btns {
+    margin-top: 32px;
+  }
+  
+  /* === Individual Buttons === */
+  .hero-btns .btn {
+    margin: 6px;
+  }
+  
+  /* === Play Icon Styling (Font Awesome) === */
+  .fa-play-circle {
+    margin-left: 4px;
+  }
+  
+  /* === Responsive Styling for Tablets/Laptops === */
+  @media screen and (max-width: 960px) {
+    .hero-container > h1 {
+      font-size: 70px;
+      margin-top: -150px;
+    }
+  }
+  
+  /* === Responsive Styling for Phones === */
+  @media screen and (max-width: 768px) {
+    .hero-container > h1 {
+      font-size: 50px;
+      margin-top: -100px;
+    }
+  
+    .hero-container > p {
+      font-size: 30px;
+    }
+  
+    .btn-mobile {
+      display: block;
+      text-decoration: none;
+    }
+  
+    .btn {
+      width: 100%;
+    }
+  }
+  

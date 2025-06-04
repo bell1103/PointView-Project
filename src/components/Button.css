@@ -1,0 +1,50 @@
+/* Define primary color variable */
+:root {
+    --primary: #fff;
+  }
+  
+  /* Base button styles */
+  .btn {
+    padding: 8px 20px;
+    border-radius: 2px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Primary button variant */
+  .btn--primary {
+    background-color: var(--primary);
+    color: #242424;
+    border: 1px solid var(--primary);
+  }
+  
+  /* Outline button variant */
+  .btn--outline {
+    background-color: var(--primary);
+    color: #fff;
+    padding: 8px 20px;
+    border: 1px solid var(--primary);
+    transition: all 0.3s ease-out;
+  }
+  
+  /* Medium size button */
+  .btn--medium {
+    padding: 8px 20px;
+    font-size: 20px;
+  }
+  
+  /* Large size button */
+  .btn--large {
+    padding: 12px 26px;
+    font-size: 20px;
+  }
+  
+  /* Hover effect for medium and large buttons */
+  btn--medium:hover,
+  .btn--large:hover {
+    background: #fff;
+    color: #242424;
+    transition: all 0.3s ease-out;
+  }
+  
