@@ -1,22 +1,29 @@
-import React from 'react';
+
+import React, {useState, useEffect} from 'react';
 import './Footer.css';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
 
+
 function Footer() {
+const [click, setClick] = useState(false);
+const[button, setButton] = useState(true);
+
   return (
     <div className='footer-container'>
       <section className='footer-login'>
         <p className='footer-login-heading'>
-          Sign up to analyze your game effortelessly with CourtVison
+          Sign up to analyze your game effortlessly with PointView
+          <i className="fas fa-video" style={{ marginLeft: '8px' }}></i>
+            
         </p>
         <p className='footer-login-text'>
           Enjoy limited features for free
         </p>
         <div className='input-areas'>
-          <form>
-            <Button buttonStyle='btn--outline'>Log In</Button>
-          </form>
+          <Button to="/log-in" buttonStyle="btn--outline" buttonSize="btn--medium">
+          LOG IN
+          </Button>
         </div>
       </section>
       <div class='footer-links'>

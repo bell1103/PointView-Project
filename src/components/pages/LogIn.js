@@ -1,7 +1,14 @@
 import React from 'react';
-import './LogIn.css'; // assuming you save the above CSS in Login.css
+import { useNavigate } from 'react-router-dom';
+import './LogIn.css';
 
-export default function Login({ onSignUpClick }) {
+export default function Login() {
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate('/sign-up');
+  };
+
   return (
     <div className='login-wrapper'>
       <div className="login-container">
@@ -14,9 +21,11 @@ export default function Login({ onSignUpClick }) {
         <a href="#" className="forgot-password">Forgot Password?</a>
         <div className="signup-redirect">
           <p>Don't have an account?</p>
-          <button onClick={onSignUpClick}>Sign Up</button>
+          <button className="sign-up-btn" onClick={handleSignUpClick}>
+            Sign Up
+          </button>
         </div>
       </div>
-      </div>
+    </div>
   );
 }

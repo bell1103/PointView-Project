@@ -6,7 +6,7 @@
   max-width: 400px;
   margin: 0 auto;
   padding: 40px 30px;
-  background: rgba(51, 127, 178, 0.6); 
+  background: rgba(0, 0, 0, 0.87); 
 
 
   border-radius: 10px;
@@ -45,7 +45,7 @@
 .login-container button {
   width: 100%;
   padding: 12px 15px;
-  background-color: #304091; 
+  background-color: #6e80dd; 
   border: none;
   border-radius: 5px;
   font-size: 1.1rem;

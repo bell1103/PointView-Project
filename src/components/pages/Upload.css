@@ -1,0 +1,48 @@
+.root{
+    background:black;
+}
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .upload-box {
+    width: 320px;
+    height: 250px;
+    background-color: white;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+  }
+  
+  .upload-box.drag-active {
+    border-color: #4caf50;
+    box-shadow: 0 0 10px #4caf50;
+  }
+  
+  .upload-label {
+    margin-top: 12px;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+  }
+  
+  .upload-label:hover {
+    color: #0056b3;
+  }
+  

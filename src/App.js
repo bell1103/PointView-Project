@@ -5,6 +5,7 @@ import Home from './components/pages/Home';
 import Dashboard from './components/pages/Dashboard';
 import Upload from './components/pages/Upload';
 import LogIn from './components/pages/LogIn';
+import SignUp from './components/pages/SignUp';
 
 
 
@@ -23,6 +24,7 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/upload' element={<Upload />} />
         <Route path='/log-in' element={<LogIn />} />
+        <Route path='sign-up' element={<SignUp />}/>
         </Routes>
       </Router>
     </>
