@@ -4,7 +4,7 @@ import './App.css';
 import Home from './components/pages/Home';
 import Dashboard from './components/pages/Dashboard';
 import Upload from './components/pages/Upload';
-import SignUp from './components/pages/SignUp';
+import LogIn from './components/pages/LogIn';
 
 
 
@@ -22,7 +22,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/upload' element={<Upload />} />
-        <Route path='/sign-up' element={<SignUp />} />
+        <Route path='/log-in' element={<LogIn />} />
         </Routes>
       </Router>
     </>

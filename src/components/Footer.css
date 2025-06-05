@@ -8,8 +8,8 @@
     align-items: center;
   }
   
-  /* === Footer Signup Section === */
-  .footer-signup {
+  /* === Footer Login Section === */
+  .footer-login {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,20 +20,20 @@
     color: #fff;
   }
   
-  /* Signup text font */
-  .footer-signup > p {
+  /* login text font */
+  .footer-login > p {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
       'Lucida Sans', Arial, sans-serif;
   }
   
-  /* Signup heading */
-  .footer-signup-heading {
+  /* login heading */
+  .footer-login-heading {
     margin-bottom: 24px;
     font-size: 24px;
   }
   
-  /* Signup subtext */
-  .footer-signup-text {
+  /* login subtext */
+  .footer-login-text {
     margin-bottom: 24px;
     font-size: 20px;
   }

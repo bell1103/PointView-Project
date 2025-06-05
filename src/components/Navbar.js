@@ -28,7 +28,8 @@ return (
             <nav className="navbar">
                 <div className='navbar-container'>
                   <Link to="/" className='navbar-logo' onClick={closeMobileMenu}>
-                    CourtVision  <i className='fab fa-typo3'></i> 
+                  PointView <i className="fas fa-video" style={{ marginLeft: '8px' }}></i>
+
                   </Link>
                   <div className='menu-icon' onClick={handleClick}>
                     <i className={click ? 'fa-tab-times' :'fas fa-bars'} />
@@ -50,12 +51,12 @@ return (
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to='/sign-up' className='nav-links-mobile' onClick={closeMobileMenu}>
-                            Sign Up
+                        <Link to='/log-in' className='nav-links-mobile' onClick={closeMobileMenu}>
+                            Log In
                         </Link>
                     </li>
                   </ul>
-                  {button && <Button buttonStyle='btn--outline'>SIGN UP</Button>}
+                  {button && <Button buttonStyle='btn--outline'>LOG IN</Button>}
                 </div>
             </nav>
         </>

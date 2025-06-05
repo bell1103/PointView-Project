@@ -8,7 +8,7 @@ function HeroSection() {
     <div className='hero-container'>
       <video src='/videos/tennis match-1.mp4' autoPlay loop muted />
       <h1>PLAY WITH A PLAN</h1>
-      <p>Improve your game with CourtVision</p>
+      <p>Improve your game with PointView</p>
       <div className='hero-btns'>
         <Button
           className='btns'
