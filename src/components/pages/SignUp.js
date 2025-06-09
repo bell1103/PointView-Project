@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import './SignUp.css'; // Create a separate CSS file for sign-up styles or reuse login styles
-import { useNavigate } from 'react-router-dom'; 
+import './SignUp.css';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../supabaseClient'; // Make sure the path is correct
 
-export default function SignUp({ onLoginClick }) {
+export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
   const handleLogInClick = () => {
     navigate('/log-in');
-}
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,24 +23,20 @@ export default function SignUp({ onLoginClick }) {
       return;
     }
 
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
+    setLoading(true);
 
-      const data = await res.json();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-      if (res.ok) {
-        alert('Registration successful!');
-        // optionally redirect or login automatically
-      } else {
-        alert(data.message || 'Sign up failed');
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Something went wrong.');
+    setLoading(false);
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert('Sign-up successful! Check your email to confirm.');
+      navigate('/log-in'); // or auto-login if you prefer
     }
   };
 
@@ -67,7 +66,9 @@ export default function SignUp({ onLoginClick }) {
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
           />
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Signing up...' : 'Sign Up'}
+          </button>
         </form>
         <div className="signup-redirect">
           <p>Already have an account?</p>
