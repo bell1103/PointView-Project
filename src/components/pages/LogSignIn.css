@@ -51,7 +51,7 @@
 }
 
 .login-container button:hover {
-  background-color: #45a049;
+  background-color: #53a7d8;
 }
 
 /* Sign up redirect */
@@ -75,6 +75,11 @@
   background-color: #fff;
   color: #000;
 }
+.forgot-password {
+  color: #f0f4ff; 
+}
+
+
 
 /* Responsive adjustments */
 @media screen and (max-width: 480px) {

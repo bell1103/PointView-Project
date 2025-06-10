@@ -1,13 +1,12 @@
 
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import './Footer.css';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
 
 
 function Footer() {
-const [click, setClick] = useState(false);
-const[button, setButton] = useState(true);
+const[button] = useState(true);
 
   return (
     <div className='footer-container'>

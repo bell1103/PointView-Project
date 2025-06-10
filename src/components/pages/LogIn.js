@@ -59,9 +59,17 @@ export default function Login() {
           <button type="submit">Log In</button>
         </form>
 
-        {errorMsg && <p style={{ color: 'red', marginTop: '10px' }}>{errorMsg}</p>}
+        <a
+          href="/forgot-password"
+          className="forgot-password"
+          onClick={(e) => {
+          e.preventDefault();
+          navigate('/forgot-password');
+        }}
+        >
+          Forgot Password?
+        </a>
 
-        <a href="#" className="forgot-password">Forgot Password?</a>
         <div className="signup-redirect">
           <p>Don't have an account?</p>
           <button className="sign-up-btn" onClick={handleSignUpClick}>
