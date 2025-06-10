@@ -15,9 +15,12 @@
 .navbar-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; 
   height: 80px;
+  width: 100%;
   max-width: 1500px;  /* Max width for larger screens */
+  width: 100%;
+  padding: 0 20px;
 }
 
 /* Navbar logo styles */
@@ -81,7 +84,7 @@
   display: none;
 }
 
-/* Menu icon initially hidden */
+
 .menu-icon {
   display: none;
 }
@@ -178,3 +181,45 @@
     transition: 250ms;
   }
 }
+
+.nav-user-profile-link {
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  top: 11px;
+  right: 20px;
+}
+
+.nav-user-profile {
+  display: flex;
+  align-items: center;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: #fff;
+  font-size: 1rem;
+  background-color: transparent;
+  margin-right: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-user-profile:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-user-profile i {
+  font-size: 1.4rem;
+  margin-right: 8px;
+}
+
+.nav-username {
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+
+.navbar-profile-wrapper {
+  position: fixed;
+  top: 12px;
+  right: 20px;
+  z-index: 1001; /* Higher than navbar */
+}
+

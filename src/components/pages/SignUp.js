@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import './SignUp.css';
+import './LogSignIn.css';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabaseClient'; // Make sure the path is correct
+import { supabase } from '../../supabaseClient'; 
+import { UserAuth } from '../../context/AuthContext';
+
 
 export default function SignUp() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  
 
   const navigate = useNavigate();
+  
+  const auth = UserAuth();
+  if (!auth) return <p>Loading...</p>;
+
+ 
 
   const handleLogInClick = () => {
     navigate('/log-in');
@@ -26,25 +37,40 @@ export default function SignUp() {
     setLoading(true);
 
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: email.toLowerCase(),
       password,
     });
 
     setLoading(false);
 
     if (error) {
-      alert(error.message);
+      if (
+        error.message.toLowerCase().includes('user already registered') ||
+        error.status === 400
+      ) {
+        setErrorMsg('Email is already registered. Please use a different email or log in.');
+      } else {
+        setErrorMsg(error.message);
+      }
     } else {
       alert('Sign-up successful! Check your email to confirm.');
-      navigate('/log-in'); // or auto-login if you prefer
+      navigate('/log-in');
     }
   };
 
   return (
     <div className='login-wrapper'>
+      <video
+      className="background-video"
+      src="/videos/stanford-men-footage.mp4"
+      autoPlay
+      loop
+      muted
+      />
       <div className="login-container">
         <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
+        {errorMsg && <p className="error-message">{errorMsg}</p>}
           <input
             type="email"
             placeholder="Email"

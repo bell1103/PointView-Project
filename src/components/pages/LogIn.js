@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserAuth } from '../../context/AuthContext'; 
-import './LogIn.css';
+import './LogSignIn.css';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signInUser } = UserAuth();
+  const { signInUser, loading } = UserAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  if (loading) return <p>Loading...</p>;
+
 
   const handleSignUpClick = () => {
     navigate('/sign-up');
@@ -21,7 +24,7 @@ export default function Login() {
     const { success, error } = await signInUser(email, password);
 
     if (success) {
-      navigate('/dashboard'); // 🔁 redirect to your Dashboard page
+      navigate('/dashboard'); // redirect to Dashboard page
     } else {
       setErrorMsg(error);
     }
@@ -29,6 +32,13 @@ export default function Login() {
 
   return (
     <div className='login-wrapper'>
+      <video
+      className="background-video"
+      src="/videos/stanford-men-footage.mp4"
+      autoPlay
+      loop
+      muted
+      />
       <div className="login-container">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>

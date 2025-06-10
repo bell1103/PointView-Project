@@ -1,0 +1,36 @@
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #fff;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  }
+  
+  .profile-info p,
+  .tennis-stats p {
+    margin: 0.5rem 0;
+  }
+  
+  .tennis-stats {
+    margin-top: 2rem;
+  }
+  
+  .profile-actions {
+    margin-top: 2rem;
+  }
+  
+  .profile-actions button {
+    padding: 0.5rem 1.2rem;
+    border: none;
+    background-color: #f44336;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .profile-actions button:hover {
+    background-color: #d32f2f;
+  }
+  

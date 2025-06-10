@@ -26,14 +26,14 @@ const[button, setButton] = useState(true);
           </Button>
         </div>
       </section>
-      <div class='footer-links'>
+      <div className='footer-links'>
         <div className='footer-link-wrapper'>
-          <div class='footer-link-items'>
+          <div className='footer-link-items'>
             <h2>About Us</h2>
             <Link to='/log-in'>How it works</Link>
             <Link to='/'>Terms of Service</Link>
           </div>
-          <div class='footer-link-items'>
+          <div className='footer-link-items'>
             <h2>Contact Us</h2>
             <Link to='/'>Contact</Link>
             <Link to='/'>Support</Link>
@@ -41,15 +41,15 @@ const[button, setButton] = useState(true);
           </div>
         </div>
       </div>
-      <section class='social-media'>
-        <div class='social-media-wrap'>
-          <div class='footer-logo'>
+      <section className='social-media'>
+        <div className='social-media-wrap'>
+          <div className='footer-logo'>
             <Link to='/' className='social-logo'>
               PointView
               <i className="fas fa-video" style={{ marginLeft: '8px' }}></i>
             </Link>
           </div>
-          <small class='website-rights'>PointView © 2025</small>
+          <small className='website-rights'>PointView © 2025</small>
          
         </div>
       </section>
