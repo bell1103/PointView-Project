@@ -1,48 +1,268 @@
-.root{
-    background:black;
+.root {
+  background: black;
+}
+
+.page-container {
+  display: flex;
+}
+
+.search-container {
+  width: 70%;
+  height: 10%;
+  left: 20%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  top: 1%;
+  margin-top: 4px;
+  align-items: left;
+}
+
+.search-inputs {
+  display: flex;
+  gap: 2%;
+  margin-bottom: 12px;
+}
+
+.search-result:hover {
+  background-color: #f0f0f0;
+}
+
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  width: 30%;
+  margin-top: -15px;
+}
+
+.search-result-box {
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(13, 183, 39, 0.05);
+  cursor: pointer;
+  width: 50%;
+}
+
+.notes-container {
+  width: 80%;
+  position: absolute;
+  top: 15%;
+  left: 1%;
+  display: flex;
+  gap: 2%;
 }
 
 .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .upload-box {
-    width: 320px;
-    height: 250px;
-    background-color: white;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 6px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-    text-align: center;
-    padding: 20px;
-    position: relative;
-  }
-  
-  .upload-box.drag-active {
-    border-color: #4caf50;
-    box-shadow: 0 0 10px #4caf50;
-  }
-  
-  .upload-label {
-    margin-top: 12px;
-    color: #007bff;
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 600;
-    user-select: none;
-  }
-  
-  .upload-label:hover {
-    color: #0056b3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  margin-left: 1%;
+  align-items: center;
+  padding: 1rem;
+}
+
+
+.upload-box {
+  width: 80%;
+  height: 100%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  margin-top: 1rem;
+}
+
+.upload-box.drag-active {
+  border-color: #4caf50;
+  box-shadow: 0 0 10px #4caf50;
+}
+
+.upload-label {
+  margin-top: 12px;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+}
+
+.upload-label:hover {
+  color: #0056b3;
+}
+
+/* notes part */
+
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
+
+* {
+  box-sizing: border-box;
+}
+
+/* GLOBAL STYLES */
+
+body,
+.Upload {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  width: 100%;
+  height: 100vh;
+  /*overflow: hidden;*/
+  font-size: 16px;
+  background: url(https://www.toptal.com/designers/subtlepatterns/patterns/lightpaperfibers.png);
+}
+
+button {
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  color: #08c;
+}
+
+button:hover {
+  color: rgb(52, 94, 180);
+}
+
+.Upload {
+  display: flex;
+}
+
+/* SIDEBAR STYLES */
+
+.app-sidebar {
+  width: 30%;
+  height: 100vh;
+  border-right: 1px solid #ddd;
+}
+
+.app-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 25px;
+}
+
+.app-sidebar-header h1 {
+  margin: 0;
+}
+
+.app-sidebar-notes {
+  height: calc(100vh - 78px);
+  overflow-y: scroll;
+}
+
+.app-sidebar-note {
+  padding: 25px;
+  cursor: pointer;
+}
+
+.sidebar-note-title {
+  display: flex;
+  justify-content: space-between;
+  white-space: nowrap;       /* Prevents line break */
+  overflow: hidden;          /* Hides overflow */
+  text-overflow: ellipsis;   /* Adds "..." */
+  max-width: 100%;  
+}
+
+.app-sidebar-note button {
+  color: rgb(255, 103, 133);
+}
+
+.app-sidebar-note p {
+  margin: 10px 0;
+  white-space: nowrap;       /* Prevents line break */
+  overflow: hidden;          /* Hides overflow */
+  text-overflow: ellipsis;   /* Adds "..." */
+  max-width: 100%;  
+}
+
+.app-sidebar-note small {
+  display: block;
+  color: #999;
+}
+
+.app-sidebar-note:hover {
+  background: #ddd;
+}
+
+.app-sidebar-note.active,
+.app-sidebar-note.active small {
+  background: rgb(89, 88, 88);
+  color: white;
+}
+
+/* NOTE EDITOR/PREVIEW (MAIN) STYLES */
+
+.app-main {
+  width: 55%;
+  margin-top: 2%;
+  height: 100vh;
+}
+
+.app-main-note-edit,
+.app-main-note-preview {
+  height: 50vh;
+}
+
+.no-active-note {
+  width: 55%;
+  height: 100vh;
+  line-height: 100vh;
+  text-align: center;
+  font-size: 2rem;
+  color: #999;
+}
+
+/* Editing */
+.app-main-note-edit {
+  padding: 25px;
+}
+
+.app-main-note-edit input,
+textarea {
+  display: block;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 500px;
+  padding: 10px;
+  resize: none;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.app-main-note-edit input {
+  height: 50px;
+  font-size: 2rem;
+}
+
+/* Preview 
+.app-main-note-preview {
+  border-top: 1px solid #ddd;
+  overflow-y: scroll;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.preview-title {
+  padding: 25px 25px 0 25px;
+  margin: 0;
+}
+
+.markdown-preview {
+  padding: 0 25px 25px 25px;
+  font-size: 1rem;
+  line-height: 2rem;
+}*/

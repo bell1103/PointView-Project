@@ -6,7 +6,6 @@ import { UserAuth } from '../../context/AuthContext';
 
 
 export default function SignUp() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -28,21 +27,44 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (password !== confirm) {
       alert('Passwords do not match');
       return;
     }
-
+  
     setLoading(true);
+  
+    // Check if email already exists in your profiles table
+    const { data: existingProfile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', email.toLowerCase())
+      .maybeSingle();
+  
 
+    if (existingProfile) {
+      setErrorMsg('Email is already registered. Please use a different email or log in.');
+      setLoading(false);
+      return;
+    }
+
+    if (profileError) {
+      setErrorMsg('Error checking email. Please try agian or enter a valid email.');
+      setLoading(false);
+      return;
+    }
+  
+  
+  
+    // Proceed with sign up if no existing profile found
     const { data, error } = await supabase.auth.signUp({
       email: email.toLowerCase(),
       password,
     });
-
+  
     setLoading(false);
-
+  
     if (error) {
       if (
         error.message.toLowerCase().includes('user already registered') ||
@@ -57,6 +79,7 @@ export default function SignUp() {
       navigate('/log-in');
     }
   };
+  
 
   return (
     <div className='login-wrapper'>

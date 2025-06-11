@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // <-- add this
+import { useNavigate } from 'react-router-dom'; 
 import { supabase } from '../../supabaseClient';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // <-- initialize router navigation
+  const navigate = useNavigate(); 
 
   const handleReset = async (e) => {
     e.preventDefault();
 
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: 'http://localhost:3000/update-password',
     });
 
@@ -19,12 +19,12 @@ const ForgotPassword = () => {
       alert('Error sending reset email: ' + error.message);
     } else {
       alert('Check your email for a reset link.');
+      navigate('/log-in');
     }
   };
 
   return (
     <div className="forgot-password-container">
-
       <h2>Reset Your Password</h2>
       <form onSubmit={handleReset}>
         <input

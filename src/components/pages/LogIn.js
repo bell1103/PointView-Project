@@ -20,13 +20,36 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+
+    if (password.length < 6 ) {
+      setErrorMsg('Password must be at least 6 charaters.');
+      return;
+    }
 
     const { success, error } = await signInUser(email, password);
-
+    
     if (success) {
       navigate('/dashboard'); // redirect to Dashboard page
     } else {
-      setErrorMsg(error);
+      if (
+        error.toLowerCase().includes('invalid login credentials') ||
+        error.toLowerCase().includes('invalid email or password')
+      ) {
+        setErrorMsg('Incorrect email or password.');
+      } else if (error.toLowerCase().includes('user not found')) {
+        setErrorMsg('No account found with that email.');
+      } else if (error.toLowerCase().includes('email not confirmed')) {
+        setErrorMsg('Please confirm your email before logging in.');
+      } else {
+        setErrorMsg(error);
+      }
     }
   };
 
@@ -42,6 +65,8 @@ export default function Login() {
       <div className="login-container">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
+          {errorMsg && <p className="error-message">{errorMsg}</p>}
+
           <input
             type="email"
             placeholder="Email"

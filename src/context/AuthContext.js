@@ -66,37 +66,41 @@ export const AuthContextProvider = ({ children }) => {
 
   // Sign Up and insert into profiles table
   const signUpNewUser = async (email, password) => {
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email: email.toLowerCase(),
-        password,
-      });
-
-      if (error) {
-        // Email already registered 
-        if (error.message.toLowerCase().includes('user already registered') || error.status === 400) {
-          return {success: false, error: 'Email is already registered. Please use a different Email or register'};
-        }
-
-        return {success: false, error: error.message };
-      }
-
-      if (!data?.user) {
-        return { success: false, error: 'Sign up failed. Please try again.' };
-      }
-
-
-      // Insert new profile row
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        email: data.user.email,
-      });
-
-      return { success: true, data };
-    } catch {
-      return { success: false, error: 'Unexpected error during sign up' };
+    const lowerEmail = email.toLowerCase();
+  
+    // Check confirmed users (in profiles)
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('email', lowerEmail)
+      .maybeSingle();
+  
+    if (existingProfile) {
+      return { success: false, error: 'Email already registered. Please log in.' };
     }
+  
+    // Try Supabase sign up
+    const { data, error } = await supabase.auth.signUp({
+      email: lowerEmail,
+      password,
+    });
+  
+    if (error) {
+      return { success: false, error: error.message };
+    }
+  
+    if (!data.user) {
+      return {
+        success: false,
+        error: 'This email has already been used but not confirmed. Please check your inbox.',
+      };
+    }
+  
+    return { success: true, data };
   };
+  
+  
+  
 
   const signInUser = async (email, password) => {
     try {

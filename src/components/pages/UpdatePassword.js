@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import './ForgotPassword.css';
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+const UpdatePassword = () => {
   const [newPassword, setNewPassword] = useState('');         
   const [confirmPassword, setConfirmPassword] = useState(''); 
-  const [message, setMessage] = useState('');
+  const [message] = useState('');
   const navigate = useNavigate();
 
-  const handleReset = async (e) => {
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        alert('No active session found.');
+        navigate('/login');
+      }
+    });
+  }, [navigate]);
+
+
+  const handleUpdate = async (e) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
@@ -18,26 +28,22 @@ const ForgotPassword = () => {
       return;
     }
 
-    
-    alert('Password reset successfully!');
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
 
-    //navigate to login page after reset
-    navigate('/log-in');
+    if (error) {
+      alert('Error updating password: ' + error.message);
+    } else {
+      alert('Password updated successfully!');
+      navigate('/dashboard');
+    }
   };
 
   return (
     <div className="forgot-password-wrapper">
       <div className="forgot-password-container">
         <h2>Reset Your Password</h2>
-        <form onSubmit={handleReset}>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
+        <form onSubmit={handleUpdate}>
+    
           <input
             type="password"
             placeholder="New Password"
@@ -67,4 +73,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default UpdatePassword;
