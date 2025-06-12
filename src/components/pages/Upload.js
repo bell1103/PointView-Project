@@ -20,11 +20,12 @@ export default function Upload() {
 
   useEffect(() => {
     const loadNotes = async () => {
-      if (user?.id) {
+      if (user?.id) return; 
+
         const userNotes = await fetchNotes(user.id);
         setNotes(userNotes);
-      }
     };
+
     loadNotes();
   }, [user]);
 
@@ -41,7 +42,7 @@ export default function Upload() {
       const updatedNote = {
         ...getActiveNote(),
         video_url: videoUrl,
-        lastModified: new Date.toISOstring(),
+        lastModified: new Date().toISOstring(),
         user_id: user.id,
       };
   
@@ -78,7 +79,7 @@ export default function Upload() {
     const newNote = {
       title: "Untitled Note",
       body: "",
-      lastModified: new Date.toISOstring(),
+      lastModified: new Date().toISOstring(),
       user_id: user.id
     };
     

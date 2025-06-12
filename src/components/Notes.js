@@ -5,7 +5,7 @@ function Notes({ activeNote, onUpdateNote }) {
     const updatedNote = {
       ...activeNote,
       [key]: value,
-      lastModified: Date.now(),
+      lastModified: new Date().toISOString()
     };
 
     onUpdateNote(updatedNote);

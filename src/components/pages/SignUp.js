@@ -34,26 +34,27 @@ export default function SignUp() {
     }
   
     setLoading(true);
+    setErrorMsg('');
   
-    // Check if email already exists in your profiles table
-    const { data: existingProfile, error: profileError } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', email.toLowerCase())
-      .maybeSingle();
+    // // Check if email already exists in your profiles table
+    // const { data: existingProfile, error: profileError } = await supabase
+    //   .from('profiles')
+    //   .select('id')
+    //   .eq('email', email.toLowerCase())
+    //   .maybeSingle();
   
 
-    if (existingProfile) {
-      setErrorMsg('Email is already registered. Please use a different email or log in.');
-      setLoading(false);
-      return;
-    }
+    // if (existingProfile) {
+    //   setErrorMsg('Email is already registered. Please use a different email or log in.');
+    //   setLoading(false);
+    //   return;
+    // }
 
-    if (profileError) {
-      setErrorMsg('Error checking email. Please try agian or enter a valid email.');
-      setLoading(false);
-      return;
-    }
+    // if (profileError) {
+    //   setErrorMsg('Error checking email. Please try agian or enter a valid email.');
+    //   setLoading(false);
+    //   return;
+    // }
   
   
   
@@ -68,6 +69,7 @@ export default function SignUp() {
     if (error) {
       if (
         error.message.toLowerCase().includes('user already registered') ||
+        error.message.toLowerCase().includes('user with this email') ||
         error.status === 400
       ) {
         setErrorMsg('Email is already registered. Please use a different email or log in.');
