@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './Upload.css';
 import Sidebar from "../Sidebar";
 import Notes from "../Notes";
@@ -41,7 +41,7 @@ export default function Upload() {
       const updatedNote = {
         ...getActiveNote(),
         video_url: videoUrl,
-        lastModified: Date.now(),
+        lastModified: new Date.toISOstring(),
         user_id: user.id,
       };
   
@@ -78,7 +78,7 @@ export default function Upload() {
     const newNote = {
       title: "Untitled Note",
       body: "",
-      lastModified: Date.now(),
+      lastModified: new Date.toISOstring(),
       user_id: user.id
     };
     
@@ -128,6 +128,25 @@ export default function Upload() {
     return notes.find((note) => note.id === activeNote);
   }
 
+  const videoElement = useMemo(() => {
+    if (!file) return null;
+  
+    const videoURL = URL.createObjectURL(file);
+    return (
+      <div className="display-video">
+        <p className="video-title">{file.name}</p>
+        <video
+          className="video-player"
+          key={videoURL}
+          controls
+        >
+          <source src={videoURL} type={file.type} />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    );
+  }, [file]);
+
   
 
   return (
@@ -167,9 +186,7 @@ export default function Upload() {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          {file ? (
-            <p>{file.name}</p>
-          ) : (
+          {file ? videoElement: (
             <p>Drag & drop your video here, or click to select</p>
           )}
 

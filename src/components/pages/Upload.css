@@ -9,13 +9,14 @@
 .search-container {
   width: 70%;
   height: 10%;
-  left: 20%;
+  left: 13%;
   position: relative;
   display: flex;
   flex-direction: column;
   top: 1%;
   margin-top: 4px;
   align-items: left;
+  z-index: 10;
 }
 
 .search-inputs {
@@ -32,8 +33,9 @@
   display: flex;
   flex-direction: column;
   gap: 0px;
-  width: 30%;
+  width: 65%;
   margin-top: -15px;
+  z-index: 10;
 }
 
 .search-result-box {
@@ -46,6 +48,7 @@
 }
 
 .notes-container {
+  z-index: 1;
   width: 80%;
   position: absolute;
   top: 15%;
@@ -57,11 +60,35 @@
 .upload-container {
   display: flex;
   flex-direction: column;
-  margin-left: 1%;
+  margin-left: -6%;
   align-items: center;
   padding: 1rem;
+  z-index: 10;
 }
 
+.video-title {
+  position: relative;
+}
+
+.display-video {
+  width: 100%;
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.video-player {
+  width: 40vw;
+  height: 35vw;
+  border-radius: 10px;
+  border: 1px solid #000;
+  margin-top: 70px;
+  left: -180%;
+  position: absolute;
+  z-index: 10;
+}
 
 .upload-box {
   width: 80%;
@@ -79,7 +106,7 @@
   text-align: center;
   padding: 20px;
   position: relative;
-  margin-top: 1rem;
+  margin-top: -10%;
 }
 
 .upload-box.drag-active {
@@ -143,7 +170,7 @@ button:hover {
 /* SIDEBAR STYLES */
 
 .app-sidebar {
-  width: 30%;
+  width: 25%;
   height: 100vh;
   border-right: 1px solid #ddd;
 }
@@ -221,7 +248,7 @@ button:hover {
   width: 55%;
   height: 100vh;
   line-height: 100vh;
-  text-align: center;
+  text-align: left;
   font-size: 2rem;
   color: #999;
 }
@@ -236,7 +263,7 @@ textarea {
   display: block;
   border: 1px solid #ddd;
   margin-bottom: 20px;
-  width: 100%;
+  width: 60%;
   height: 500px;
   padding: 10px;
   resize: none;
