@@ -5,37 +5,42 @@ export const saveNote = async (note) => {
     id,
     title,
     body,
+    date,
     video_url = '',
-    lastModified,
     user_id,
   } = note;
 
   if (!user_id) return { error: 'Missing user_id' };
 
+  // Validate or parse date input safely
+  const parsedDate = date ? new Date(date) : null;
+  if (date && isNaN(parsedDate)) return { error: 'Invalid date format' };
+
+
   const payload = {
     title,
     body,
+    date: parsedDate? parsedDate.toISOString(): null,
     video_url,
-    last_modified: typeof lastModified === 'number'
-      ? lastModified
-      : new Date(lastModified).getTime(), 
     user_id,
   };
+  
 
   if (id) {
-    // Update existing note
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('notes')
       .update(payload)
-      .eq('id', id);
-    return { error, data: null };
-
+      .eq('id', id)
+      .select();
+    console.log('Update result:', { data, error });
+    return { error, data: data?.[0] || null };
   } else {
-    // Insert new note
     const { data, error } = await supabase
       .from('notes')
       .insert([payload])
-      .select(); // Select returns the new row, including generated ID
-    return { error, data: data?.[0] };
+      .select();
+    console.log('Insert result:', { data, error });
+    return { error, data: data?.[0] || null };
   }
+  
 };

@@ -16,11 +16,13 @@ export default function Upload() {
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const { user } = UserAuth();
+  
+
 
 
   useEffect(() => {
     const loadNotes = async () => {
-      if (user?.id) return; 
+      if (!user?.id) return; 
 
         const userNotes = await fetchNotes(user.id);
         setNotes(userNotes);
@@ -42,11 +44,11 @@ export default function Upload() {
       const updatedNote = {
         ...getActiveNote(),
         video_url: videoUrl,
-        lastModified: new Date().toISOstring(),
         user_id: user.id,
+        date: active.date || new Date().toISOString(),
       };
   
-      onUpdateNote(updatedNote);
+      await onUpdateNote(updatedNote);
       await saveNote(updatedNote);
     }
   };
@@ -71,16 +73,19 @@ export default function Upload() {
   };
 
   const [notes, setNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState(false);
+  const [activeNote, setActiveNote] = useState(null);
 
   const onAddNote = async () => {
+    console.log("Add note clicked");
     if (!user) return;
-
+    
+    
     const newNote = {
+      user_id: user.id,
       title: "Untitled Note",
       body: "",
-      lastModified: new Date().toISOstring(),
-      user_id: user.id
+      date: new Date().toISOString(), 
+
     };
     
 
@@ -92,21 +97,39 @@ export default function Upload() {
     }
     
     setNotes((prevNotes) => [data, ...prevNotes]);
-    setActiveNote(data.id);
+    setActiveNote(String(data.id));
   };
 
-  const onUpdateNote = (updatedNote) => {
-    const updatedNotesArray = notes.map((note) => {
-      if (note.id === activeNote) {
-        return updatedNote;
-      }
-
-      return note;
+  const onUpdateNote = async (updatedNote) => {
+    const { error, data } = await saveNote(updatedNote);
+    if (error) {
+      console.error("Error saving note:", error);
+      return;
+    }
+  
+    setNotes((prevNotes) => {
+      const updatedNotesArray = prevNotes.map((note) =>
+        note.id === data.id ? data : note
+      );
+      return updatedNotesArray;
     });
-
-    setNotes(updatedNotesArray);
-    saveNote(updatedNote);
   };
+  
+  
+
+  const onEditDate = async (id, newDate) => {
+    const updatedNotes = notes.map((note) =>
+      note.id === id ? { ...note, date: new Date(newDate).toISOString() } : note
+    );
+    setNotes(updatedNotes);
+  
+    const updatedNote = updatedNotes.find((note) => note.id === id);
+    const { error } = await saveNote(updatedNote);
+    if (error) {
+      console.error("Error saving date from sidebar:", error);
+    }
+  };
+  
 
 
   const onDeleteNote = async (idToDelete) => {
@@ -125,9 +148,8 @@ export default function Upload() {
     }
   };
 
-  const getActiveNote = () => {
-    return notes.find((note) => note.id === activeNote);
-  }
+  const getActiveNote = () => notes.find(note => String(note.id) === String(activeNote));
+
 
   const videoElement = useMemo(() => {
     if (!file) return null;
@@ -160,7 +182,7 @@ export default function Upload() {
           onDeleteNote={onDeleteNote}
           activeNote={activeNote}
           setActiveNote={setActiveNote}
-
+          onEditDate={onEditDate}
         />
         <Notes 
           activeNote={getActiveNote()} 

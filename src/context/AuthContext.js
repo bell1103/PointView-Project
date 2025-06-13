@@ -68,36 +68,42 @@ export const AuthContextProvider = ({ children }) => {
   const signUpNewUser = async (email, password) => {
     const lowerEmail = email.toLowerCase();
   
-    // Check confirmed users (in profiles)
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('email', lowerEmail)
-      .maybeSingle();
-  
-    if (existingProfile) {
-      return { success: false, error: 'Email already registered. Please log in.' };
-    }
-  
-    // Try Supabase sign up
     const { data, error } = await supabase.auth.signUp({
       email: lowerEmail,
       password,
     });
   
+    // If error exists, handle it
     if (error) {
-      return { success: false, error: error.message };
-    }
-  
-    if (!data.user) {
       return {
         success: false,
-        error: 'This email has already been used but not confirmed. Please check your inbox.',
+        error: error.message || 'Sign-up failed. Please try again.',
+      };
+    }
+  
+    // If user object is null, it's likely already registered but unconfirmed
+    if (!data?.user) {
+      return {
+        success: false,
+        error: 'This email is already registered but not confirmed. Please check your inbox.',
+      };
+    }
+  
+    // Try inserting into profiles table
+    const { error: insertError } = await supabase
+      .from('profiles')
+      .insert({ id: data.user.id });
+  
+    if (insertError) {
+      return {
+        success: false,
+        error: 'Failed to create new profile. Please sign up with new email.',
       };
     }
   
     return { success: true, data };
   };
+  
   
   
   

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DateInput from './DateInput';
 
 export default function Search({ notesData, setNotesData, setActiveNote }) {
     const [searchTerm, setSearchTerm] = useState("");
@@ -15,17 +16,18 @@ export default function Search({ notesData, setNotesData, setActiveNote }) {
 
     const filteredNotes = notesData.filter(note => {
         const matchesText = 
-            note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            note.body.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const noteDate = new Date(note.lastModified);
-        const formattedNoteDate = noteDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
-
+          note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          note.body.toLowerCase().includes(searchTerm.toLowerCase());
+      
+        // Validate date first
+        const noteDate = new Date(note.date);
+        const formattedNoteDate = !isNaN(noteDate) ? noteDate.toISOString().split('T')[0] : null;
+      
         const matchesDate = searchDate === "" || formattedNoteDate === searchDate;
-
+      
         return matchesText && matchesDate;
-    });
-
+      });
+      
 
     
     return (
@@ -40,12 +42,8 @@ export default function Search({ notesData, setNotesData, setActiveNote }) {
             style={{ marginBottom: '8px', padding: '5px' }}
         />
 
-        <input
-                className="search-date"
-                type="date"
-                value={searchDate}
-                onChange={handleDateChange}
-        />
+            <DateInput date={searchDate} onDateChange={handleDateChange} />
+
         </div>
         
         {searchTerm.trim() !== "" && (

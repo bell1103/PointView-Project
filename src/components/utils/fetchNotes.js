@@ -7,7 +7,7 @@ export const fetchNotes = async (user_id) => {
     .from('notes')
     .select('*')
     .eq('user_id', user_id)
-    .order('last_modified', { ascending: false });
+    .order('date', { ascending: false });
 
   if (error) {
     console.error("Error fetching notes:", error);
@@ -16,7 +16,6 @@ export const fetchNotes = async (user_id) => {
 
   return data.map((note) => ({
     ...note,
-    lastModified: new Date(note.last_modified),
-    }));
-    
+    })); 
+
   };
