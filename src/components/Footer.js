@@ -28,14 +28,10 @@ const[button] = useState(true);
       <div className='footer-links'>
         <div className='footer-link-wrapper'>
           <div className='footer-link-items'>
-            <h2>About Us</h2>
-            <Link to='/log-in'>How it works</Link>
-            <Link to='/'>Terms of Service</Link>
-          </div>
-          <div className='footer-link-items'>
-            <h2>Contact Us</h2>
-            <Link to='/'>Contact</Link>
-            <Link to='/'>Support</Link>
+            <Link to='/about-us'>About Us</Link>
+            <Link to='/log-in'>How It Works</Link>
+            <Link to='/'>FAQ</Link>
+            <Link to='/contact'>Contact Us</Link>
             <Link to='/'>Sponsorships</Link>
           </div>
         </div>

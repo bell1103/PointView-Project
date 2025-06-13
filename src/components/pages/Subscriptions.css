@@ -1,0 +1,16 @@
+.subscriptions-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 16px;
+    text-align: center;
+    gap: 2rem;
+    box-sizing: border-box;
+    word-spacing: 20%;
+}
+
+.sub-wrapper {
+  padding: 4rem; /* Adds spacing around the cards */
+  background: #827878; /* White background */
+  margin-top: -7%;
+}

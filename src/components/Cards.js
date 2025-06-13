@@ -15,7 +15,6 @@ function Cards() {
               label='Singles/double' // user input 
               path='/services'//some path to where the data of the match is 
             />
-            
           </ul>
         </div>
       </div>

@@ -2,6 +2,7 @@
 .cards {
   padding: 4rem; /* Adds spacing around the cards */
   background: #fff; /* White background */
+  margin-top: -7%;
 }
 
 /* Center-align all h1 headers */

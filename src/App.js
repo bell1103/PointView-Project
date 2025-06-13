@@ -12,6 +12,8 @@ import SignupSuccess from './components/pages/SignupSuccess';
 import Profile from './components/pages/Profile';
 import ForgotPassword from './components/pages/ForgotPassword';
 import UpdatePassword from './components/pages/UpdatePassword';
+import About from './components/pages/About';
+import Contact from './components/pages/Contact';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -33,6 +35,8 @@ function App() {
           <Route path='/profile' element={<Profile />}/>
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/about-us" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           </Routes>
         </Suspense>
       </Router>

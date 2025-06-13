@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../../App.css';
 import HeroSection from '../HeroSection';
-import Cards from '../Cards';
 import Footer from '../Footer';
-import LogIn from './LogIn';
-import SignUp from './SignUp';
+import Subscriptions from './Subscriptions';
 
 function Home() {
+  //scroll to top when the component mounts
+      useEffect(() => {
+          window.scrollTo(0, 0);
+      }, [/log-in/]); // Trigger the effect when the pathname changes
   return (
     <>
       <HeroSection />
-      <Cards/>
-      <Footer/>
-      <LogIn/>
-      <SignUp/>
+      <Subscriptions />
+      <Footer />
     </>
   );
 }
