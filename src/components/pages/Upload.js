@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import './Upload.css';
+// import './Upload.css';
 import Sidebar from "../Sidebar";
 import Notes from "../Notes";
 import { fetchNotes } from "../utils/fetchNotes"; // import thisimport uuid from "react-uuid";
