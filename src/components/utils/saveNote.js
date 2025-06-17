@@ -6,8 +6,8 @@ export const saveNote = async (note) => {
     title,
     body,
     date,
-    video_url = '',
     user_id,
+    video_url,
   } = note;
 
   if (!user_id) return { error: 'Missing user_id' };
@@ -21,8 +21,8 @@ export const saveNote = async (note) => {
     title,
     body,
     date: parsedDate? parsedDate.toISOString(): null,
-    video_url,
     user_id,
+    video_url,
   };
   
 
@@ -31,16 +31,21 @@ export const saveNote = async (note) => {
       .from('notes')
       .update(payload)
       .eq('id', id)
-      .select();
+      .select()
+      .single();
+
     console.log('Update result:', { data, error });
-    return { error, data: data?.[0] || null };
+    return {data, error};
+
   } else {
     const { data, error } = await supabase
       .from('notes')
       .insert([payload])
-      .select();
+      .select()
+      .single(); 
+
     console.log('Insert result:', { data, error });
-    return { error, data: data?.[0] || null };
+    return { data, error};
   }
   
 };

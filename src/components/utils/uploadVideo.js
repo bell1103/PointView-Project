@@ -1,25 +1,36 @@
+// utils/uploadVideo.js
 import { supabase } from '../../supabaseClient';
+import { v4 as uuidv4 } from 'uuid';
 
-export const uploadVideo = async (file, userId) => {
+export async function uploadVideo(file, userId) {
   if (!file || !userId) return null;
 
-  const fileName = `${userId}/${Date.now()}-${file.name}`;
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${userId}/${uuidv4()}.${fileExt}`;
+  const filePath = `videos/${fileName}`;
 
-  const { data, error } = await supabase.storage
-    .from('videos') // your bucket name
-    .upload(fileName, file, {
+  // upload to supabase storage
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from('videos')
+    .upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
     });
 
-  if (error) {
-    console.error('Video upload error:', error.message);
+    if (uploadError) {
+      console.error('Upload failed:', uploadError.message);
+      return null;
+    }
+  
+  // get public url 
+  const {data: urlData, error: urlError } = supabase.storage
+    .from('videos')
+    .getPublicUrl(filePath);
+
+  if (urlError) {
+    console.error('Error getting public URL:', urlError.message);
     return null;
   }
-
-  const { data: publicUrlData } = supabase.storage
-    .from('videos')
-    .getPublicUrl(fileName);
-
-  return publicUrlData?.publicUrl || null;
-};
+  const videoUrl = urlData.publicUrl;
+  return urlData.publicUrl;
+}

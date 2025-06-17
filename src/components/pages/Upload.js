@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect} from 'react';
 // import './Upload.css';
 import Sidebar from "../Sidebar";
 import Notes from "../Notes";
-import { fetchNotes } from "../utils/fetchNotes"; // import thisimport uuid from "react-uuid";
+import { fetchNotes } from "../utils/fetchNotes"; 
+import { fetchVideosMetadata } from '../utils/fetchVideosMetadata';
 import Search from "../utils/Search";
 import { uploadVideo } from "../utils/uploadVideo";
 import { saveNote } from "../utils/saveNote";
@@ -12,65 +13,71 @@ import { UserAuth } from "../../context/AuthContext";
 
 
 
+
 export default function Upload() {
-  const [file, setFile] = useState(null);
-  const [dragActive, setDragActive] = useState(false);
+  const [video, setVideos] = useState([]);
   const { user } = UserAuth();
+
   
 
 
 
   useEffect(() => {
-    const loadNotes = async () => {
+    const loadData = async () => {
       if (!user?.id) return; 
-
+      
+      try {
         const userNotes = await fetchNotes(user.id);
-        setNotes(userNotes);
+        setNotes(userNotes || []);
+
+        const userVideos = await fetchVideosMetadata(user.id);
+        setVideos(userVideos || []);
+      } catch (error) {
+        console.error("Error loading data:", error);
+        setNotes([]);
+        setVideos([]);
+      }
+  
     };
 
-    loadNotes();
+    loadData();
   }, [user]);
 
-  const handleFileChange = async (e) => {
-    const selectedFile = e.target.files[0];
-    if (!selectedFile || !user) return;
+  // const handleFileChange = async (e) => {
+  //   const selectedFile = e.target.files[0];
+  //   if (!selectedFile || !user || !activeNote) return;
   
-    setFile(selectedFile);
+  //   const noteToUpdate = getActiveNote();
+  //   if (!noteToUpdate) {
+  //     console.error("No active note selected to attach the video.");
+  //     return;
+  //   }
   
-    const videoUrl = await uploadVideo(selectedFile, user.id);
+  //   const videoUrl = await uploadVideo(selectedFile, user.id);
+  //   if (!videoUrl) return;
+  
+  //   const updatedNote = {
+  //     ...noteToUpdate,
+  //     video_url: videoUrl,
+  //     date: noteToUpdate.date || new Date().toISOString(),
+  //   };
+  
+  //   const { data, error } = await saveNote(updatedNote);
+  //   if (error) {
+  //     console.error("Error saving note with video URL:", error);
+  //     return;
+  //   }
+  
+  //   setNotes((prevNotes) =>
+  //     prevNotes.map((note) =>
+  //       note.id === data.id ? data : note
+  //     )
+  //   );
+  
     
-    const active = getActiveNote();
-    if (videoUrl && active) {
-      const updatedNote = {
-        ...getActiveNote(),
-        video_url: videoUrl,
-        user_id: user.id,
-        date: active.date || new Date().toISOString(),
-      };
+  //   setActiveNote(String(data.id));
+  // };
   
-      await onUpdateNote(updatedNote);
-      await saveNote(updatedNote);
-    }
-  };
-  
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragActive(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setDragActive(false);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFile(e.dataTransfer.files[0]);
-    }
-  };
 
   const [notes, setNotes] = useState([]);
   const [activeNote, setActiveNote] = useState(null);
@@ -85,6 +92,7 @@ export default function Upload() {
       title: "Untitled Note",
       body: "",
       date: new Date().toISOString(), 
+      video_url: null,
 
     };
     
@@ -151,30 +159,9 @@ export default function Upload() {
   const getActiveNote = () => notes.find(note => String(note.id) === String(activeNote));
 
 
-  const videoElement = useMemo(() => {
-    if (!file) return null;
-  
-    const videoURL = URL.createObjectURL(file);
-    return (
-      <div className="display-video">
-        <p className="video-title">{file.name}</p>
-        <video
-          className="video-player"
-          key={videoURL}
-          controls
-        >
-          <source src={videoURL} type={file.type} />
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    );
-  }, [file]);
-
-  
-
   return (
     <div className="page-container">
-
+  
       <div className="notes-container">
         <Sidebar
           notes={notes}
@@ -183,14 +170,17 @@ export default function Upload() {
           activeNote={activeNote}
           setActiveNote={setActiveNote}
           onEditDate={onEditDate}
-        />
-        <Notes 
-          activeNote={getActiveNote()} 
-          onUpdateNote={onUpdateNote} 
-        />
 
+        />
+        <div className="note-and-video">
+          <Notes 
+            activeNote={getActiveNote()} 
+            onUpdateNote={onUpdateNote} 
+          />
+  
+        </div>
       </div>
-
+  
       <div className="search-container">
         <Search 
           notesData={notes} 
@@ -198,34 +188,8 @@ export default function Upload() {
           setActiveNote={setActiveNote}
         />
       </div>
-
-
-      <div className="upload-container">
-        <h1>Upload Video</h1>
-
-        <div
-          className={`upload-box ${dragActive ? 'drag-active' : ''}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          {file ? videoElement: (
-            <p>Drag & drop your video here, or click to select</p>
-          )}
-
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleFileChange}
-            id="fileInput"
-            style={{ display: 'none' }}
-          />
-          <label htmlFor="fileInput" className="upload-label">
-            Browse Files
-          </label>
-        </div>
-      </div>
     </div>
   );
 
 }
+  
