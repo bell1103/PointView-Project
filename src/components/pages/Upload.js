@@ -1,195 +1,144 @@
-import React, { useState, useEffect} from 'react';
-// import './Upload.css';
-import Sidebar from "../Sidebar";
-import Notes from "../Notes";
-import { fetchNotes } from "../utils/fetchNotes"; 
-import { fetchVideosMetadata } from '../utils/fetchVideosMetadata';
-import Search from "../utils/Search";
-import { uploadVideo } from "../utils/uploadVideo";
-import { saveNote } from "../utils/saveNote";
-import { deleteNote } from '../utils/deleteNote';
+import React, { useState } from 'react';
 import { UserAuth } from "../../context/AuthContext";
-
-
-
-
+import { saveNote } from "../utils/saveNote";
+import { uploadVideo } from "../utils/uploadVideo";
 
 export default function Upload() {
-  const [video, setVideos] = useState([]);
   const { user } = UserAuth();
 
-  
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [videoFile, setVideoFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState('');
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setVideoFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
 
-
-  useEffect(() => {
-    const loadData = async () => {
-      if (!user?.id) return; 
-      
-      try {
-        const userNotes = await fetchNotes(user.id);
-        setNotes(userNotes || []);
-
-        const userVideos = await fetchVideosMetadata(user.id);
-        setVideos(userVideos || []);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        setNotes([]);
-        setVideos([]);
-      }
-  
-    };
-
-    loadData();
-  }, [user]);
-
-  // const handleFileChange = async (e) => {
-  //   const selectedFile = e.target.files[0];
-  //   if (!selectedFile || !user || !activeNote) return;
-  
-  //   const noteToUpdate = getActiveNote();
-  //   if (!noteToUpdate) {
-  //     console.error("No active note selected to attach the video.");
-  //     return;
-  //   }
-  
-  //   const videoUrl = await uploadVideo(selectedFile, user.id);
-  //   if (!videoUrl) return;
-  
-  //   const updatedNote = {
-  //     ...noteToUpdate,
-  //     video_url: videoUrl,
-  //     date: noteToUpdate.date || new Date().toISOString(),
-  //   };
-  
-  //   const { data, error } = await saveNote(updatedNote);
-  //   if (error) {
-  //     console.error("Error saving note with video URL:", error);
-  //     return;
-  //   }
-  
-  //   setNotes((prevNotes) =>
-  //     prevNotes.map((note) =>
-  //       note.id === data.id ? data : note
-  //     )
-  //   );
-  
-    
-  //   setActiveNote(String(data.id));
-  // };
-  
-
-  const [notes, setNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState(null);
-
-  const onAddNote = async () => {
-    console.log("Add note clicked");
-    if (!user) return;
-    
-    
-    const newNote = {
-      user_id: user.id,
-      title: "Untitled Note",
-      body: "",
-      date: new Date().toISOString(), 
-      video_url: null,
-
-    };
-    
-
-    const { data, error } = await saveNote(newNote);
-
-    if (error || !data ||!data.id) {
-      console.error("Failed to save note:", error, data);
+  const handleUpload = async () => {
+    if (!user || !title || !body || !videoFile) {
+      setMessage("Please complete all fields and select a video.");
       return;
     }
-    
-    setNotes((prevNotes) => [data, ...prevNotes]);
-    setActiveNote(String(data.id));
-  };
 
-  const onUpdateNote = async (updatedNote) => {
-    const { error, data } = await saveNote(updatedNote);
-    if (error) {
-      console.error("Error saving note:", error);
-      return;
-    }
-  
-    setNotes((prevNotes) => {
-      const updatedNotesArray = prevNotes.map((note) =>
-        note.id === data.id ? data : note
-      );
-      return updatedNotesArray;
-    });
-  };
-  
-  
+    setUploading(true);
+    setMessage('');
 
-  const onEditDate = async (id, newDate) => {
-    const updatedNotes = notes.map((note) =>
-      note.id === id ? { ...note, date: new Date(newDate).toISOString() } : note
-    );
-    setNotes(updatedNotes);
-  
-    const updatedNote = updatedNotes.find((note) => note.id === id);
-    const { error } = await saveNote(updatedNote);
-    if (error) {
-      console.error("Error saving date from sidebar:", error);
+    try {
+      const videoUrl = await uploadVideo(videoFile, user.id);
+      if (!videoUrl) throw new Error("Video upload failed.");
+
+      const newNote = {
+        user_id: user.id,
+        title,
+        body,
+        date: new Date().toISOString(),
+        video_url: videoUrl,
+      };
+
+      const { data, error } = await saveNote(newNote);
+      if (error) throw error;
+
+      setMessage("Upload successful!");
+      setTitle('');
+      setBody('');
+      setVideoFile(null);
+      setPreviewUrl(null);
+    } catch (err) {
+      console.error(err);
+      setMessage("Upload failed. Try again.");
+    } finally {
+      setUploading(false);
     }
   };
-  
-
-
-  const onDeleteNote = async (idToDelete) => {
-    const { error } = await deleteNote(idToDelete);
-  
-    if (error) {
-      console.error("Failed to delete note from Supabase:", error);
-      return;
-    }
-  
-    setNotes(notes.filter((note) => note.id !== idToDelete));
-  
-    // If the deleted note was active, clear it
-    if (activeNote === idToDelete) {
-      setActiveNote(null);
-    }
-  };
-
-  const getActiveNote = () => notes.find(note => String(note.id) === String(activeNote));
-
 
   return (
-    <div className="page-container">
-  
-      <div className="notes-container">
-        <Sidebar
-          notes={notes}
-          onAddNote={onAddNote}
-          onDeleteNote={onDeleteNote}
-          activeNote={activeNote}
-          setActiveNote={setActiveNote}
-          onEditDate={onEditDate}
+    <div style={styles.container}>
+      <h2>Upload Note with Video</h2>
+      <input
+        style={styles.input}
+        type="text"
+        placeholder="Note title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        style={styles.textarea}
+        placeholder="Write your note here..."
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+      />
+      <input
+        style={styles.fileInput}
+        type="file"
+        accept="video/*"
+        onChange={handleVideoChange}
+      />
+      
+      {/* Video Preview */}
+      {previewUrl && (
+        <video style={styles.video} controls>
+          <source src={previewUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      )}
 
-        />
-        <div className="note-and-video">
-          <Notes 
-            activeNote={getActiveNote()} 
-            onUpdateNote={onUpdateNote} 
-          />
-  
-        </div>
-      </div>
-  
-      <div className="search-container">
-        <Search 
-          notesData={notes} 
-          setNotesData={setNotes} 
-          setActiveNote={setActiveNote}
-        />
-      </div>
+      <button style={styles.button} onClick={handleUpload} disabled={uploading}>
+        {uploading ? "Uploading..." : "Upload Note"}
+      </button>
+      {message && <p>{message}</p>}
     </div>
   );
-
 }
-  
+
+const styles = {
+  container: {
+    maxWidth: '500px',
+    margin: '40px auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '15px',
+    padding: '20px',
+    border: '1px solid #ddd',
+    borderRadius: '10px',
+    backgroundColor: '#fafafa',
+  },
+  input: {
+    padding: '10px',
+    fontSize: '1rem',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+  },
+  textarea: {
+    padding: '10px',
+    fontSize: '1rem',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    minHeight: '120px',
+  },
+  fileInput: {
+    padding: '8px',
+  },
+  video: {
+    width: '100%',
+    maxHeight: '300px',
+    borderRadius: '6px',
+    marginTop: '10px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  },
+  button: {
+    padding: '10px',
+    fontSize: '1rem',
+    backgroundColor: '#007bff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+  },
+};

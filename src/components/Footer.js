@@ -3,11 +3,16 @@ import React, {useState} from 'react';
 import './Footer.css';
 import { Button } from './Button';
 import { Link } from 'react-router-dom';
+import { UserAuth } from '../context/AuthContext';
 
 
 function Footer() {
 const[button] = useState(true);
-
+const { user: sessionUser, signOut, loading } = UserAuth();
+const [click, setClick] = useState(false);
+const handleClick = () => setClick(!click);
+  
+const closeMobileMenu = () => setClick(false);
   return (
     <div className='footer-container'>
       <section className='footer-login'>
@@ -20,9 +25,20 @@ const[button] = useState(true);
           Enjoy limited features for free
         </p>
         <div className='input-areas'>
-          <Button to="/log-in" buttonStyle="btn--outline" buttonSize="btn--medium">
-          LOG IN
-          </Button>
+        <div className="footer-profile-wrapper">
+        <Link
+          to={sessionUser ? '/profile' : '/log-in'}
+          className="nav-user-profile-link"
+          onClick={closeMobileMenu}
+        >
+          <div className="nav-user-profile">
+            <i className="fas fa-user-circle"></i>
+            <span className="nav-username">
+              {sessionUser ? sessionUser.email.split('@')[0] : 'Log In'}
+            </span>
+          </div>
+        </Link>
+      </div>
         </div>
       </section>
       <div className='footer-links'>
