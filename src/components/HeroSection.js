@@ -11,13 +11,13 @@ function HeroSection() {
       <h1>PLAY WITH A PLAN</h1>
       <p>Improve your game with PointView</p>
       <div className='hero-btns'>
-        <Link to="/upload">
+        <Link to="/log-in">
           <Button
             className='btns'
             buttonStyle='btn--outline'
             buttonSize='btn--large'
           >
-            UPLOAD MATCHES  
+            LOG IN  
           </Button>
         </Link>
         

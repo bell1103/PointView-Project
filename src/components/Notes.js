@@ -133,6 +133,18 @@ const handleClick = () => fileInputRef.current?.click();
     onChange={(e) => onEditField("date", e.target.value)}
   />
 
+    <select
+        value={activeNote.match_type || ''}
+        onChange={(e) => onEditField('match_type', e.target.value)}
+    >
+     <option value="" disabled>
+        Select Match Type
+    </option>
+    <option value="Singles">Singles</option>
+    <option value="Doubles">Doubles</option>
+    </select>
+
+
   {/* Drag/drop area */}
   <div
     className={`upload-box ${dragActive ? "active-drop" : ""}`}

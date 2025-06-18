@@ -1,17 +1,30 @@
 import React, { useState } from 'react';
+import { Editor, EditorState, RichUtils, convertToRaw } from 'draft-js';
+import { useNavigate } from 'react-router-dom';
+import 'draft-js/dist/Draft.css';
 import { UserAuth } from "../../context/AuthContext";
 import { saveNote } from "../utils/saveNote";
 import { uploadVideo } from "../utils/uploadVideo";
+import './Upload.css';
+
+const TOOLBAR_BUTTONS = [
+  { style: 'BOLD', label: 'B', title: 'Bold', className: 'bold' },
+  { style: 'ITALIC', label: 'I', title: 'Italic', className: 'italic' },
+  { style: 'UNDERLINE', label: 'U', title: 'Underline', className: 'underline' },
+  { style: 'unordered-list-item', label: '•', title: 'Bullet List', className: 'bullet' },
+];
 
 export default function Upload() {
   const { user } = UserAuth();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const [videoFile, setVideoFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
+  const [matchType, setMatchType] = useState('Singles');
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
@@ -22,8 +35,8 @@ export default function Upload() {
   };
 
   const handleUpload = async () => {
-    if (!user || !title || !body || !videoFile) {
-      setMessage("Please complete all fields and select a video.");
+    if (!user || !title) {
+      setMessage("Please provide at least a title.");
       return;
     }
 
@@ -31,13 +44,20 @@ export default function Upload() {
     setMessage('');
 
     try {
-      const videoUrl = await uploadVideo(videoFile, user.id);
-      if (!videoUrl) throw new Error("Video upload failed.");
+      let videoUrl = null;
+      if (videoFile) {
+        videoUrl = await uploadVideo(videoFile, user.id);
+        if (!videoUrl) throw new Error("Video upload failed.");
+      }
+
+      const contentState = editorState.getCurrentContent();
+      const rawContent = JSON.stringify(convertToRaw(contentState));
 
       const newNote = {
         user_id: user.id,
         title,
-        body,
+        match_type: matchType,
+        body: rawContent,
         date: new Date().toISOString(),
         video_url: videoUrl,
       };
@@ -47,9 +67,12 @@ export default function Upload() {
 
       setMessage("Upload successful!");
       setTitle('');
-      setBody('');
+      setMatchType('Singles');
+      setEditorState(EditorState.createEmpty());
       setVideoFile(null);
       setPreviewUrl(null);
+
+      navigate('/my-home');
     } catch (err) {
       console.error(err);
       setMessage("Upload failed. Try again.");
@@ -58,87 +81,97 @@ export default function Upload() {
     }
   };
 
+  const toggleStyle = (style) => {
+    if (style === 'unordered-list-item') {
+      setEditorState(RichUtils.toggleBlockType(editorState, style));
+    } else {
+      setEditorState(RichUtils.toggleInlineStyle(editorState, style));
+    }
+  };
+
+  const isActive = (style) => {
+    if (style === 'unordered-list-item') {
+      const selection = editorState.getSelection();
+      const blockType = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey())
+        .getType();
+      return blockType === style;
+    }
+    const currentStyle = editorState.getCurrentInlineStyle();
+    return currentStyle.has(style);
+  };
+
   return (
-    <div style={styles.container}>
+    <div className="upload-container">
       <h2>Upload Note with Video</h2>
+
       <input
-        style={styles.input}
+        className="upload-title-input"
         type="text"
         placeholder="Note title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <textarea
-        style={styles.textarea}
-        placeholder="Write your note here..."
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-      />
+      <select
+        value={matchType}
+        onChange={(e) => setMatchType(e.target.value)}
+        className="match-type-select"
+      >
+        <option value="Singles">Singles</option>
+        <option value="Doubles">Doubles</option>
+      </select>
+
+      <div className="toolbar">
+        {TOOLBAR_BUTTONS.map(({ style, label, title, className }) => (
+          <button
+            key={style}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              toggleStyle(style);
+            }}
+            title={title}
+            className={`toolbar-button ${className} ${isActive(style) ? 'active' : ''}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="editor-wrapper">
+        <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          placeholder="Write your note here..."
+        />
+      </div>
+
       <input
-        style={styles.fileInput}
+        className="video-input"
         type="file"
         accept="video/*"
         onChange={handleVideoChange}
       />
-      
-      {/* Video Preview */}
+
       {previewUrl && (
-        <video style={styles.video} controls>
+        <video
+          controls
+          className="video-preview"
+        >
           <source src={previewUrl} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
 
-      <button style={styles.button} onClick={handleUpload} disabled={uploading}>
+      <button
+        className="upload-button"
+        onClick={handleUpload}
+        disabled={uploading}
+      >
         {uploading ? "Uploading..." : "Upload Note"}
       </button>
-      {message && <p>{message}</p>}
+
+      {message && <p className="message-text">{message}</p>}
     </div>
   );
 }
-
-const styles = {
-  container: {
-    maxWidth: '500px',
-    margin: '40px auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    padding: '20px',
-    border: '1px solid #ddd',
-    borderRadius: '10px',
-    backgroundColor: '#fafafa',
-  },
-  input: {
-    padding: '10px',
-    fontSize: '1rem',
-    borderRadius: '6px',
-    border: '1px solid #ccc',
-  },
-  textarea: {
-    padding: '10px',
-    fontSize: '1rem',
-    borderRadius: '6px',
-    border: '1px solid #ccc',
-    minHeight: '120px',
-  },
-  fileInput: {
-    padding: '8px',
-  },
-  video: {
-    width: '100%',
-    maxHeight: '300px',
-    borderRadius: '6px',
-    marginTop: '10px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-  },
-  button: {
-    padding: '10px',
-    fontSize: '1rem',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-  },
-};

@@ -14,8 +14,12 @@ import ForgotPassword from './components/pages/ForgotPassword';
 import UpdatePassword from './components/pages/UpdatePassword';
 import About from './components/pages/About';
 import Contact from './components/pages/Contact';
+import MyHome from './components/pages/MyHome';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MyMatches from './components/pages/MyMatches';
+import PlayMatch from './components/pages/PlayMatch';
+
 
 
 function App() {
@@ -37,6 +41,9 @@ function App() {
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/about-us" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/my-home" element={<MyHome />} />
+          <Route path="/my-matches" element={<MyMatches />} />
+          <Route path="/play/:matchId" element={<PlayMatch />} />
           </Routes>
         </Suspense>
       </Router>

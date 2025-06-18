@@ -6,8 +6,9 @@ export const saveNote = async (note) => {
     title,
     body,
     date,
-    user_id,
+    user_id,      
     video_url,
+    match_type,
   } = note;
 
   if (!user_id) return { error: 'Missing user_id' };
@@ -23,6 +24,7 @@ export const saveNote = async (note) => {
     date: parsedDate? parsedDate.toISOString(): null,
     user_id,
     video_url,
+    match_type,
   };
   
 

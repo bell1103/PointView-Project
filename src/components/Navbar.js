@@ -26,7 +26,10 @@ function Navbar() {
     <>
       <nav className="navbar">
         <div className="navbar-container">
-          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+          <Link  to={sessionUser ? "/my-home" : "/"} 
+                className="navbar-logo" 
+                onClick={closeMobileMenu}
+          >
             PointView <i className="fas fa-video" style={{ marginLeft: '8px' }}></i>
           </Link>
           <div className="menu-icon" onClick={handleClick}>
@@ -34,10 +37,10 @@ function Navbar() {
           </div>
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
             <li className="nav-item">
-              <Link to="/" className="nav-links" onClick={closeMobileMenu}>Home</Link>
+              <Link to="/my-home" className="nav-links" onClick={closeMobileMenu}>Dashbored</Link>
             </li>
             <li className="nav-item">
-              <Link to="/dashboard" className="nav-links" onClick={closeMobileMenu}>Dashboard</Link>
+              <Link to="/my-matches" className="nav-links" onClick={closeMobileMenu}>My Matches</Link>
             </li>
             <li className="nav-item">
               <Link to="/upload" className="nav-links" onClick={closeMobileMenu}>Upload</Link>

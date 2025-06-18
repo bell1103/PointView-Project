@@ -1,0 +1,82 @@
+/* === Page Layout === */
+.matches-page {
+    position: relative;
+    height: 100%;         
+    padding: 20px;
+    padding-bottom: 80px;   /* space for footer */
+    box-sizing: border-box;
+    overflow-y: auto;       /* Enable vertical scrolling if needed */
+  }
+  
+  /* === Background Video Styling === */
+  .matches-page video.bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.4;
+  }
+  
+  /* === Filter Bar === */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-bar input,
+  .filter-bar select {
+    padding: 6px;
+    font-size: 14px;
+  }
+  
+  /* === Grid Layout === */
+  .matches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  
+  /* === Match Cards === */
+  .match-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  /* === Thumbnails === */
+  .video-thumb, .match-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+  .no-video-thumb {
+    width: 100%;
+    height: 140px;
+    background: #ccc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* === Footer === */
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    font-size: 14px;
+  }
+  
